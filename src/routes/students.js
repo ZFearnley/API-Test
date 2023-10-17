@@ -81,3 +81,29 @@ router.put('/:id', async (req, res, next) => {
         next(error)
     }
 })
+
+router.delete('/:id', async(req, res, next) => {
+    try{
+        const { id } = req.params
+        const student = await students.findOne({
+            _id:id
+        })
+
+        if(!student) {
+            return next()
+        }
+        await students.remove({
+            _id:id
+        })
+
+        res.json({
+            message: 'Student information deleted'
+        })
+
+
+    } catch(error){
+        next(error)
+    }
+})
+
+module.exports = router

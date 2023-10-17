@@ -1,15 +1,50 @@
-const Joi = require('joi')
-const schema = Joi.object({
-    name: Joi.string()
-    .min(3)
-    .max(30)
-    .required(),
+// const Joi = require('joi')
+// const schema = Joi.object({
+//     name: Joi.string()
+//     .min(3)
+//     .max(30)
+//     .required(),
 
-    address: Joi.string()
-    .min(3)
-    .max(30)
-    .required(),
+//     address: Joi.string()
+//     .min(3)
+//     .max(30)
+//     .required(),
 
+// })
+
+// module.exports = schema
+
+const express = require('express')
+const schema = require('../db/schema')
+const db = require('../db/connection')
+
+const students = db.get('students')
+
+const router = express.Router()
+
+router.get('/', async (req, res, next) => {
+    try {
+    const allStudents = await students.find({})
+    res.json(allStudents)
+    } catch(error) {
+        next(error)
+    }
 })
 
-module.exports = schema
+router.get('/:id', async (req, res, next) => {
+    try {
+        const {id} = req.params
+        const student = await students.findOne({
+            _id: id
+        })
+
+        if(!student) {
+            const error = new Error('Not a student')
+            return next(error)
+        }
+
+        res.json(student)
+    } catch (error){
+        next(error)
+    }
+})

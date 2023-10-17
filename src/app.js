@@ -7,7 +7,7 @@ const app = express()
 
 //const students = require('./routes/students')
 
-//app.use(notFound)
-//app.use(errorHandler)
+app.use(notFound)
+app.use(errorHandler)
 
 module.exports = app
